@@ -17,15 +17,13 @@ var Directives;
         return AngularMarkdownService;
     }());
     Directives.AngularMarkdownService = AngularMarkdownService;
-    function markDownFilter($sce) {
+    function markDownFilter($sce, $markdown) {
         return function (text) {
-            var markdown = new AngularMarkdownService();
-            var html = markdown.convert(text || '');
-            return $sce.trustAsHtml(html);
+            return $sce.trustAsHtml($markdown.convert(text || ''));
         };
     }
     Directives.markDownFilter = markDownFilter;
     angular.module('AngularMarkdown', [])
         .service("$markdown", AngularMarkdownService)
-        .filter('markdown', ['$sce', markDownFilter]);
+        .filter('markdown', ['$sce', '$markdown', markDownFilter]);
 })(Directives || (Directives = {}));

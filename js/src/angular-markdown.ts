@@ -4,7 +4,7 @@ module Directives {
     export class AngularMarkdownService {
         public converter = new window['showdown'].Converter();
 
-        convert = (text:string):string => {
+        convert = (text: string): string => {
             //var txt = (text || '').replace(/\r?\n/g, '<br/>');
             var html = this.converter.makeHtml(text);
 
@@ -16,16 +16,13 @@ module Directives {
         };
     }
 
-    export function markDownFilter($sce) {
+    export function markDownFilter($sce, $markdown) {
         return function (text) {
-            let markdown = new AngularMarkdownService();
-            let html = markdown.convert(text || '');
-
-            return $sce.trustAsHtml(html);
+            return $sce.trustAsHtml($markdown.convert(text || ''));
         };
     }
 
     angular.module('AngularMarkdown', [])
         .service("$markdown", AngularMarkdownService)
-        .filter('markdown', ['$sce', markDownFilter]);
+        .filter('markdown', ['$sce', '$markdown', markDownFilter]);
 }
